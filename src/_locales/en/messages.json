@@ -1,0 +1,12 @@
+{
+  "assigneeName": {
+    "message": "Assignee: $NAME$",
+    "placeholders": { "name": { "content": "$1" } }
+  },
+  "JIRAEdges": {
+    "message": "JIRA Edges"
+  },
+  "JIRAEdgesDescription": {
+    "message": "Smooths out the rough edges of JIRA OnDemand"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "__MSG_JIRAEdges__",
+  "version": "0.0.4",
+  "author": "Chris Bandy",
+  "description": "__MSG_JIRAEdgesDescription__",
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.jira.com/*/RapidBoard.*"],
+      "js": ["vendor/mustache-0.8.1.js", "common.js", "rapidboard.js"]
+    }
+  ],
+  "default_locale": "en",
+  "page_action": {},
+
+  "manifest_version": 2
+}
