@@ -38,6 +38,13 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
       fragment.innerHTML = html;
       target.insertBefore(fragment.firstChild, target.firstChild);
     },
+
+    replace: function (old, html) {
+      var container = old.parentNode;
+      var fragment = document.createElement('div');
+      fragment.innerHTML = html;
+      container.replaceChild(fragment.firstChild, old);
+    }
   });
 
   extend(JIRAEdges.JIRA, {

@@ -86,6 +86,18 @@ describe("Common functions", function () {
         expect(target.innerHTML).toBe(html + existing);
       });
     });
+    
+    describe("replace", function () {
+      it("replaces a DOM node with a string of HTML", function () {
+        var existing = 'existing <em>html</em>';
+        var html = '<span class="item"><br></span>';
+        var target = document.createElement('section');
+        target.innerHTML = existing;
+        
+        JIRAEdges.DOM.replace(target.querySelector('em'), html);
+        expect(target.innerHTML).toBe('existing ' + html);
+      });
+    });
   });
   
   describe("JIRA Search Results", function () {
