@@ -103,7 +103,7 @@ describe("RapidBoard", function () {
       expect(issue.querySelector).toHaveBeenCalledWith('div.ghx-end');
       expect(JIRAEdges.DOM.prepend).toHaveBeenCalledWith(insideIssue, renderedTemplate);
       expect(Mustache.render).toHaveBeenCalledWith(
-        '<img src="{{url}}" alt="{{name}}" title="i18n Name" style="margin-right:5px; vertical-align:middle" />',
+        '<img class="jira-edges-avatar" src="{{url}}" alt="{{name}}" title="i18n Name" />',
         jasmine.objectContaining({
           name: 'John',
           url: 'http://www.example.com/image.jpg'

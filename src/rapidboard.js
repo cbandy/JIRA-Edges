@@ -118,9 +118,9 @@ var JIRAEdges = JIRAEdges || {};
     },
 
     showIssueAssignee: function (issue, assignee) {
-      var avatar = '<img src="{{url}}" alt="{{name}}" title="'
+      var avatar = '<img class="jira-edges-avatar" src="{{url}}" alt="{{name}}" title="'
         + chrome.i18n.getMessage("assigneeName", "{{name}}")
-        + '" style="margin-right:5px; vertical-align:middle" />';
+        + '" />';
 
       DOM.prepend(
         issue.querySelector('div.ghx-end'),

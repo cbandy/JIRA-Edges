@@ -8,6 +8,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.jira.com/*/RapidBoard.*"],
+      "css": ["rapidboard.css"],
       "js": ["vendor/mustache-0.8.1.js", "common.js", "rapidboard.js"]
     }
   ],
