@@ -28,6 +28,14 @@ var JIRAEdges = JIRAEdges || {};
   };
 
   extend(JIRAEdges.RapidBoard.prototype, {
+    forEachSprintIssue: function (sprintId, callback) {
+      DOM.forEach(
+        this.container,
+        PLANNING_SPRINT_SELECTOR + '[data-sprint-id="' + sprintId + '"] div.js-issue',
+        callback
+      );
+    },
+
     getSprintIssues: function (sprintId) {
 
       var dispatchPlanningSprintIssuesChanged = function () {
@@ -52,20 +60,16 @@ var JIRAEdges = JIRAEdges || {};
     },
 
     handlePlanningSprintIssuesChanged: function (event) {
-      var sprintId = event.detail;
-      var issues = this.sprintIssues[sprintId],
-        issueSelector = PLANNING_SPRINT_SELECTOR + '[data-sprint-id="' + sprintId + '"] div.js-issue',
-        self = this;
-
-      DOM.forEach(self.container, issueSelector, function (issue) {
-        var assignee = issues[issue.dataset.issueKey].assignee;
-        if (assignee) self.showIssueAssignee(issue, assignee);
-      });
+      this.showSprintAssignees(event.detail);
     },
 
     handlePlanningSprintVisible: function (event) {
       var sprintId = event.detail;
-      this.sprintIssues[sprintId] || this.getSprintIssues(sprintId);
+
+      if (this.sprintIssues[sprintId])
+        this.showSprintAssignees(sprintId);
+      else
+        this.getSprintIssues(sprintId);
     },
 
     handlePlanningDone: function (event) {
@@ -118,14 +122,30 @@ var JIRAEdges = JIRAEdges || {};
     },
 
     showIssueAssignee: function (issue, assignee) {
-      var avatar = '<img class="jira-edges-avatar" src="{{url}}" alt="{{name}}" title="'
-        + chrome.i18n.getMessage("assigneeName", "{{name}}")
-        + '" />';
-
-      DOM.prepend(
-        issue.querySelector('div.ghx-end'),
-        Mustache.render(avatar, { name: assignee.displayName, url: assignee.avatarUrls['16x16'] })
+      var avatar = Mustache.render(
+        '<img class="jira-edges-avatar" src="{{url}}" alt="{{name}}" title="'
+          + chrome.i18n.getMessage("assigneeName", "{{name}}")
+          + '" />',
+        { name: assignee.displayName, url: assignee.avatarUrls['16x16'] }
       );
+
+      var existing = issue.querySelector('img.jira-edges-avatar');
+      var gutter = issue.querySelector('div.ghx-end');
+
+      if (existing)
+        DOM.replace(existing, avatar);
+      else
+        DOM.prepend(gutter, avatar);
+    },
+
+    showSprintAssignees: function (sprintId) {
+      var issues = this.sprintIssues[sprintId];
+      var showAssigneeIfAny = function (issue) {
+        var assignee = issues[issue.dataset.issueKey].assignee;
+        if (assignee) this.showIssueAssignee(issue, assignee);
+      };
+
+      this.forEachSprintIssue(sprintId, showAssigneeIfAny.bind(this));
     },
   });
 

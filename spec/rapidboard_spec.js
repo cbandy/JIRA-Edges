@@ -78,30 +78,34 @@ describe("RapidBoard", function () {
   });
 
   describe("showIssueAssignee", function () {
-    var assignee, issue;
+    var assignee,
+      existingAvatar,
+      issue,
+      issueGutter,
+      renderedTemplate;
 
     beforeEach(function () {
       assignee = {
         displayName: 'John',
         avatarUrls: { '16x16': 'http://www.example.com/image.jpg' }
       };
+      existingAvatar = null;
+      issueGutter = {};
+      renderedTemplate = {};
 
       chrome.i18n = { getMessage: function () {} };
       issue = { querySelector: function () {} };
       Mustache = { render: function () {} };
+
+      spyOn(chrome.i18n, 'getMessage').and.returnValue('i18n Name');
+      spyOn(issue, 'querySelector').and.callFake(function (selector) {
+        if (selector === 'div.ghx-end') return issueGutter;
+        if (selector === 'img.jira-edges-avatar') return existingAvatar;
+      });
+      spyOn(Mustache, 'render').and.returnValue(renderedTemplate);
     });
 
-    it("adds an assignee's avatar to an issue", function () {
-      var insideIssue = {}, renderedTemplate = {};
-      spyOn(chrome.i18n, 'getMessage').and.returnValue('i18n Name');
-      spyOn(issue, 'querySelector').and.returnValue(insideIssue);
-      spyOn(JIRAEdges.DOM, 'prepend');
-      spyOn(Mustache, 'render').and.returnValue(renderedTemplate);
-
-      rapidBoard.showIssueAssignee(issue, assignee);
-
-      expect(issue.querySelector).toHaveBeenCalledWith('div.ghx-end');
-      expect(JIRAEdges.DOM.prepend).toHaveBeenCalledWith(insideIssue, renderedTemplate);
+    afterEach(function () {
       expect(Mustache.render).toHaveBeenCalledWith(
         '<img class="jira-edges-avatar" src="{{url}}" alt="{{name}}" title="i18n Name" />',
         jasmine.objectContaining({
@@ -109,6 +113,20 @@ describe("RapidBoard", function () {
           url: 'http://www.example.com/image.jpg'
         })
       );
+    });
+
+    it("removes an existing assignee's avatar from an issue", function () {
+      existingAvatar = {};
+      spyOn(JIRAEdges.DOM, 'replace');
+      rapidBoard.showIssueAssignee(issue, assignee);
+      expect(JIRAEdges.DOM.replace).toHaveBeenCalledWith(existingAvatar, renderedTemplate);
+    });
+
+    it("adds an assignee's avatar to an issue", function () {
+      spyOn(JIRAEdges.DOM, 'prepend');
+      rapidBoard.showIssueAssignee(issue, assignee);
+      expect(JIRAEdges.DOM.prepend).toHaveBeenCalledWith(issueGutter, renderedTemplate);
+      ;
     });
   });
 });
