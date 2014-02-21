@@ -19,6 +19,19 @@ describe("Common functions", function () {
     });
   });
 
+  describe("unique", function () {
+    it("returns an array of non-unique values", function () {
+      expect(JIRAEdges.unique([1,2,1,4,4,3,4,5])).toEqual([1,2,4,3,5]);
+    });
+
+    it("can take a function to map values to valid property names", function () {
+      var list = [ {a:1}, {a:2}, {a:1}, {a:4}, {a:4}, {a:3}, {a:4}, {a:5} ];
+      var map = function (object) { return object.a; };
+
+      expect(JIRAEdges.unique(list, map)).toEqual([ {a:1}, {a:2}, {a:4}, {a:3}, {a:5} ]);
+    });
+  });
+
   describe("uriEncode", function () {
     it("turns an object into URI parameters", function () {
       expect(JIRAEdges.uriEncode({ a: "b", c: 1, d: true })).toBe("a=b&c=1&d=true");

@@ -17,6 +17,20 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
     clone: function (object) { return extend({}, object); },
     extend: extend,
 
+    unique: function (list, map) {
+      if (map === undefined) map = function (i) { return i; };
+      var visited = {};
+
+      return Array.prototype.filter.call(list, function (item) {
+        var key = map(item);
+
+        if (visited.hasOwnProperty(key))
+          return false;
+
+        return visited[key] = true;
+      });
+    },
+
     uriEncode: function (data) {
       var key, result = [];
       for (key in data) result.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
