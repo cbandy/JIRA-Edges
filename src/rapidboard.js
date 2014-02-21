@@ -97,10 +97,21 @@ var JIRAEdges = JIRAEdges || {};
       };
 
       var observeSprints = function (container) {
-        DOM.forEach(container, 'div.js-sprint-container', function (sprint) {
-          DOM.observe(sprint, { attributes: true, attributeFilter: ['class'] }, function (mutations) {
-            if (planningSprintIsExpanded(sprint)) dispatchPlanningSprintVisible(sprint.dataset.sprintId);
+        var observer = new WebKitMutationObserver(function (mutations) {
+          mutations = JIRAEdges.unique(mutations, function (mutation) {
+            return mutation.target.dataset.sprintId;
           });
+
+          mutations.forEach(function (mutation) {
+            var sprint = mutation.target;
+
+            if (planningSprintIsExpanded(sprint))
+              dispatchPlanningSprintVisible(sprint.dataset.sprintId);
+          });
+        });
+
+        DOM.forEach(container, 'div.js-sprint-container', function (sprint) {
+          observer.observe(sprint, { attributes: true, attributeFilter: ['class'] });
         });
       };
 
