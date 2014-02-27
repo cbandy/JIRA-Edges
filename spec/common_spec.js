@@ -77,9 +77,32 @@ describe("Common functions", function () {
   });
 
   describe("DOM functions", function () {
+    describe("append", function () {
+      it("inserts string of HTML into the end of a DOM node", function () {
+        var existing = 'existing <em>html</em>';
+        var html = '<span class="item"><br></span>';
+        var target = document.createElement('section');
+        target.innerHTML = existing;
+
+        JIRAEdges.DOM.append(target, html);
+        expect(target.innerHTML).toBe(existing + html);
+      });
+    });
+
+    describe("createElement", function () {
+      it("creates a DOM Node from a string of HTML", function () {
+        var node = JIRAEdges.DOM.createElement('<span class="item"><br></span>');
+
+        expect(node instanceof Element).toBeTruthy();
+        expect(node.className).toBe('item');
+        expect(node.innerHTML).toBe('<br>');
+        expect(node.tagName).toBe('SPAN');
+      });
+    });
+    
     describe("forEach", function () {
       var callback, container,
-        list = ['a', 1, true],
+        list = ["a", 1, true],
         selector = {};
 
       beforeEach(function () {
@@ -92,7 +115,7 @@ describe("Common functions", function () {
         JIRAEdges.DOM.forEach(container, selector, callback);
 
         expect(callback.calls.count()).toBe(3);
-        expect(callback).toHaveBeenCalledWith('a', 0, list);
+        expect(callback).toHaveBeenCalledWith("a", 0, list);
         expect(callback).toHaveBeenCalledWith(1, 1, list);
         expect(callback).toHaveBeenCalledWith(true, 2, list);
       });

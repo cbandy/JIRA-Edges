@@ -58,6 +58,16 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
   });
 
   extend(JIRAEdges.DOM, {
+    append: function (target, html) {
+      target.appendChild(JIRAEdges.DOM.createElement(html));
+    },
+
+    createElement: function (html) {
+      var fragment = document.createElement('div');
+      fragment.innerHTML = html;
+      return fragment.firstChild;
+    },
+
     forEach: function (container, selector, callback) {
       Array.prototype.forEach.call(container.querySelectorAll(selector), callback);
     },
@@ -67,16 +77,12 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
     },
 
     prepend: function (target, html) {
-      var fragment = document.createElement('div');
-      fragment.innerHTML = html;
-      target.insertBefore(fragment.firstChild, target.firstChild);
+      target.insertBefore(JIRAEdges.DOM.createElement(html), target.firstChild);
     },
 
     replace: function (old, html) {
       var container = old.parentNode;
-      var fragment = document.createElement('div');
-      fragment.innerHTML = html;
-      container.replaceChild(fragment.firstChild, old);
+      container.replaceChild(JIRAEdges.DOM.createElement(html), old);
     }
   });
 
