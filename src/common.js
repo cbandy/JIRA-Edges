@@ -5,7 +5,7 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
 
 // https://docs.atlassian.com/jira/REST/ondemand/
 
-(function (undefined) {
+(function (undefined) { "use strict";
 
   var extend = function (destination, source) {
     for (var property in source)
@@ -16,6 +16,25 @@ JIRAEdges.Network || (JIRAEdges.Network = {});
   extend(JIRAEdges, {
     clone: function (object) { return extend({}, object); },
     extend: extend,
+
+    match: function (regexp, string) {
+      var group
+        , named = /\(\?<([^>]+)>([^)]+)\)/
+        , names = []
+        , result;
+
+      while (group = named.exec(regexp)) {
+        names.push(group[1]);
+        regexp = regexp.replace(group[0], "(" + group[2] + ")");
+      }
+
+      if (result = string.match(regexp))
+        names.forEach(function (name, index) {
+          result[name] = result[index + 1];
+        });
+
+      return result;
+    },
 
     unique: function (list, map) {
       if (map === undefined) map = function (i) { return i; };

@@ -19,6 +19,36 @@ describe("Common functions", function () {
     });
   });
 
+  describe("match", function () {
+    describe("without named groups", function () {
+      it("behaves just like String.match", function () {
+        expect(JIRAEdges.match("", "")).toEqual("".match(""));
+        expect(JIRAEdges.match("", "a")).toEqual("a".match(""));
+
+        expect(JIRAEdges.match("(.*)", "")).toEqual("".match("(.*)"));
+        expect(JIRAEdges.match("(.*)", "a")).toEqual("a".match("(.*)"));
+
+        expect(JIRAEdges.match("([^ ]+) (.+)", "a b")).toEqual("a b".match("([^ ]+) (.+)"));
+      });
+    });
+
+    describe("with named groups", function () {
+      it("also has a property for each matched name", function () {
+        expect(JIRAEdges.match("(?<name>.+)", "")).toBe(null);
+
+        expect(JIRAEdges.match("(?<name>.*)", "")).toEqual(["", ""]);
+        expect(JIRAEdges.match("(?<name>.*)", "")['name']).toBe("");
+
+        expect(JIRAEdges.match("(?<name>.*)", "a")).toEqual(["a", "a"]);
+        expect(JIRAEdges.match("(?<name>.*)", "a")['name']).toBe("a");
+
+        expect(JIRAEdges.match("(?<one>[^ ]+) (?<two>.+)", "a b")).toEqual(["a b", "a", "b"]);
+        expect(JIRAEdges.match("(?<one>[^ ]+) (?<two>.+)", "a b")['one']).toBe("a");
+        expect(JIRAEdges.match("(?<one>[^ ]+) (?<two>.+)", "a b")['two']).toBe("b");
+      });
+    });
+  });
+
   describe("unique", function () {
     it("returns an array of non-unique values", function () {
       expect(JIRAEdges.unique([1,2,1,4,4,3,4,5])).toEqual([1,2,4,3,5]);
