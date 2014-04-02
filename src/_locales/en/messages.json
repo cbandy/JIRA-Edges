@@ -3,6 +3,9 @@
     "message": "Assignee: $NAME$",
     "placeholders": { "name": { "content": "$1" } }
   },
+	"issueProgressFormat": {
+		"message": "(?<name>.+) - (?<duration>.+)"
+	},
   "JIRAEdges": {
     "message": "JIRA Edges"
   },

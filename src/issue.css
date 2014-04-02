@@ -1,0 +1,11 @@
+.jira-edges-progress {
+  font-size: smaller;
+}
+
+.jira-edges-progress span {
+  white-space: nowrap;
+}
+
+.jira-edges-progress span + span::before {
+  content: "/ ";
+}
